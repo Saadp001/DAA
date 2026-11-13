@@ -1,131 +1,50 @@
- Quick-sort Analysis 
+import random
+
+# Quick Sort function
+def quick_sort(arr, low, high, randomized=False):
+
+    if low < high:
+
+        # Select random pivot if randomized
+        if randomized:
+            p = random.randint(low, high)
+            arr[p], arr[high] = arr[high], arr[p]
+
+        # Select last element as pivot
+        pivot = arr[high]
+
+        # Partition the array
+        i = low - 1
+
+        for j in range(low, high):
+
+            if arr[j] <= pivot:
+                i += 1
+                arr[i], arr[j] = arr[j], arr[i]
+
+        # Place pivot in correct position
+        arr[i + 1], arr[high] = arr[high], arr[i + 1]
+
+        p = i + 1
+
+        # Sort left and right subarrays
+        quick_sort(arr, low, p - 1, randomized)
+        quick_sort(arr, p + 1, high, randomized)
 
 
-import java.util.*;
+# Take input
+arr = list(map(int, input("Enter array elements: ").split()))
 
-public class QuickSortAnalysis {
+# Create two copies
+a = arr.copy()
+b = arr.copy()
 
- static long deterministicComparisons = 0;
- static long randomizedComparisons = 0;
+# Deterministic Quick Sort
+quick_sort(a, 0, len(a) - 1)
 
- static void deterministicQuickSort(int[] arr, int low, int high) {
+# Randomized Quick Sort
+quick_sort(b, 0, len(b) - 1, True)
 
-    if(low < high) {
-       int p = deterministicPartition(arr, low, high);
-
-       deterministicQuickSort(arr, low, p - 1);
-       deterministicQuickSort(arr, p + 1, high);
-    }
- }
-
- static int deterministicPartition(int[] arr, int low, int high) {
-
-    int pivot = arr[high];
-    int i = low - 1;
-
-    for(int j = low; j < high; j++) {
-       deterministicComparisons++;
-
-       if(arr[j] <= pivot) {
-          i++;
-          swap(arr, i, j);
-       }
-    }
-
-    swap(arr, i + 1, high);
-    return i + 1;
- }
-
- static void randomizedQuickSort(int[] arr, int low, int high) {
-
-    if(low < high) {
-       int p = randomizedPartition(arr, low, high);
-
-       randomizedQuickSort(arr, low, p - 1);
-       randomizedQuickSort(arr, p + 1, high);
-    }
- }
-
- static int randomizedPartition(int[] arr, int low, int high) {
-
-    Random rand = new Random();
-    int randomIndex = low + rand.nextInt(high - low + 1);
-
-    swap(arr, randomIndex, high);
-
-    int pivot = arr[high];
-    int i = low - 1;
-
-    for(int j = low; j < high; j++) {
-       randomizedComparisons++;
-
-       if(arr[j] <= pivot) {
-          i++;
-          swap(arr, i, j);
-       }
-    }
-
-    swap(arr, i + 1, high);
-    return i + 1;
- }
-
- static void swap(int[] arr, int i, int j) {
-
-    int temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
- }
-
- static void display(int[] arr) {
-
-    for(int x : arr) {
-       System.out.print(x + " ");
-    }
-    System.out.println();
- }
-
- public static void main(String[] args) {
-
-    Scanner sc = new Scanner(System.in);
-
-    System.out.print("Enter number of elements: ");
-    int n = sc.nextInt();
-
-    int[] arr = new int[n];
-
-    System.out.println("Enter elements:");
-    for(int i = 0; i < n; i++) {
-       arr[i] = sc.nextInt();
-    }
-
-    int[] deterministicArray = arr.clone();
-    int[] randomizedArray = arr.clone();
-
-    long start1 = System.nanoTime();
-
-    deterministicQuickSort(deterministicArray, 0, n - 1);
-
-    long end1 = System.nanoTime();
-
-    long start2 = System.nanoTime();
-
-    randomizedQuickSort(randomizedArray, 0, n - 1);
-
-    long end2 = System.nanoTime();
-
-    System.out.println("\nOriginal Array:");
-    display(arr);
-
-    System.out.println("\nDeterministic Quick Sort:");
-    display(deterministicArray);
-    System.out.println("Comparisons = " + deterministicComparisons);
-    System.out.println("Execution Time = " + (end1 - start1) + " ns");
-
-    System.out.println("\nRandomized Quick Sort:");
-    display(randomizedArray);
-    System.out.println("Comparisons = " + randomizedComparisons);
-    System.out.println("Execution Time = " + (end2 - start2) + " ns");
-
-    sc.close();
- }
-}
+# Display results
+print("Deterministic Quick Sort:", a)
+print("Randomized Quick Sort:", b)
